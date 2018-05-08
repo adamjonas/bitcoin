@@ -20,6 +20,7 @@ static const bool DEFAULT_LOGTIMEMICROS = false;
 static const bool DEFAULT_LOGIPS        = false;
 static const bool DEFAULT_LOGTIMESTAMPS = true;
 static const bool DEFAULT_LOGTHREADNAMES = false;
+static const bool DEFAULT_LOGASYNC      = true;
 extern const char * const DEFAULT_DEBUGLOGFILE;
 
 extern bool fLogIPs;
@@ -104,6 +105,7 @@ namespace BCLog {
         void DisconnectTestLogger();
 
         void ShrinkDebugFile();
+        void FlushFile();
 
         uint32_t GetCategoryMask() const { return m_categories.load(); }
 
@@ -140,6 +142,13 @@ bool GetLogCategory(BCLog::LogFlags& flag, const std::string& str);
 // unconditionally log to debug.log! It should not be the case that an inbound
 // peer can fill up a user's disk with debug.log entries.
 
+namespace async_logging {
+  void Init(void);
+
+  /** Queue a log message to be written. */
+  void Queue(std::string&& str);
+}
+
 template <typename... Args>
 static inline void LogPrintf(const char* fmt, const Args&... args)
 {
@@ -151,7 +160,7 @@ static inline void LogPrintf(const char* fmt, const Args&... args)
             /* Original format string will have newline so don't add one here */
             log_msg = "Error \"" + std::string(fmterr.what()) + "\" while formatting log message: " + fmt;
         }
-        LogInstance().LogPrintStr(log_msg);
+        async_logging::Queue(std::move(log_msg));
     }
 }
 
