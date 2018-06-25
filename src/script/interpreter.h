@@ -114,6 +114,12 @@ enum
     // Making OP_CODESEPARATOR and FindAndDelete fail any non-segwit scripts
     //
     SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
+
+
+    // Constants to point to the highest flag in use. Add new flags above this line.
+    //
+    SCRIPT_VERIFY_HIGHEST_FLAG_PLUS_ONE,
+    SCRIPT_VERIFY_HIGHEST_FLAG = SCRIPT_VERIFY_HIGHEST_FLAG_PLUS_ONE - 1
 };
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
