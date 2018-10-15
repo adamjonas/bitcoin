@@ -69,7 +69,12 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
+<<<<<<< HEAD
 #include <boost/thread.hpp>
+=======
+#include <boost/bind.hpp>
+#include <openssl/crypto.h>
+>>>>>>> refactor: Replace boost::thread with InterruptibleThread
 
 #if ENABLE_ZMQ
 #include <zmq/zmqabstractnotifier.h>
@@ -149,7 +154,7 @@ NODISCARD static bool CreatePidFile()
 
 static std::unique_ptr<ECCVerifyHandle> globalVerifyHandle;
 
-static boost::thread_group threadGroup;
+static std::vector<InterruptibleThread> threadGroup;
 static CScheduler scheduler;
 
 void Interrupt(NodeContext& node)
@@ -205,8 +210,13 @@ void Shutdown(NodeContext& node)
 
     // After everything has been shut down, but before things get flushed, stop the
     // CScheduler/checkqueue threadGroup
-    threadGroup.interrupt_all();
-    threadGroup.join_all();
+    for (auto& th : threadGroup) {
+        th.interrupt();
+    }
+    scheduler.stop();
+    for (auto& th : threadGroup) {
+        th.join();
+    }
 
     // After the threads that potentially access these pointers have been stopped,
     // destruct and reset all to nullptr.

@@ -14,8 +14,6 @@
 #include <sys/stat.h>
 #endif
 
-#include <boost/thread.hpp>
-
 namespace {
 
 //! Make sure database has a unique fileid within the environment. If it
@@ -169,7 +167,7 @@ bool BerkeleyEnvironment::Open(bool retry)
     if (fDbEnvInit)
         return true;
 
-    boost::this_thread::interruption_point();
+    InterruptionPoint();
 
     fs::path pathIn = strPath;
     TryCreateDirectories(pathIn);
@@ -243,7 +241,7 @@ BerkeleyEnvironment::BerkeleyEnvironment()
 {
     Reset();
 
-    boost::this_thread::interruption_point();
+    InterruptionPoint();
 
     LogPrint(BCLog::DB, "BerkeleyEnvironment::MakeMock\n");
 
@@ -826,7 +824,7 @@ bool BerkeleyBatch::PeriodicFlush(BerkeleyDatabase& database)
 
         if (nRefCount == 0)
         {
-            boost::this_thread::interruption_point();
+            InterruptionPoint();
             std::map<std::string, int>::iterator mi = env->mapFileUseCount.find(strFile);
             if (mi != env->mapFileUseCount.end())
             {

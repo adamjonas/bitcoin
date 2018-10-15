@@ -7,7 +7,6 @@
 #include <checkqueue.h>
 #include <prevector.h>
 #include <vector>
-#include <boost/thread/thread.hpp>
 #include <random.h>
 
 

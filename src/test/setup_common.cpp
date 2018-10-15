@@ -75,6 +75,7 @@ BasicTestingSetup::~BasicTestingSetup()
 TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(chainName)
 {
     const CChainParams& chainparams = Params();
+<<<<<<< HEAD:src/test/setup_common.cpp
     // Ideally we'd move all the RPC tests to the functional testing framework
     // instead of unit tests, but for now we need these here.
     g_rpc_node = &m_node;
@@ -108,10 +109,42 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
 
     m_node.banman = MakeUnique<BanMan>(GetDataDir() / "banlist.dat", nullptr, DEFAULT_MISBEHAVING_BANTIME);
     m_node.connman = MakeUnique<CConnman>(0x1337, 0x1337); // Deterministic randomness for tests.
+=======
+        // Ideally we'd move all the RPC tests to the functional testing framework
+        // instead of unit tests, but for now we need these here.
+
+        RegisterAllCoreRPCCommands(tableRPC);
+        ClearDatadirCache();
+
+        // We have to run a scheduler thread to prevent ActivateBestChain
+        // from blocking due to queue overrun.
+        threadGroup.emplace_back(std::bind(&CScheduler::serviceQueue, &scheduler));
+        GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
+
+        mempool.setSanityCheck(1.0);
+        pblocktree.reset(new CBlockTreeDB(1 << 20, true));
+        pcoinsdbview.reset(new CCoinsViewDB(1 << 23, true));
+        pcoinsTip.reset(new CCoinsViewCache(pcoinsdbview.get()));
+        if (!LoadGenesisBlock(chainparams)) {
+            throw std::runtime_error("LoadGenesisBlock failed.");
+        }
+        {
+            CValidationState state;
+            if (!ActivateBestChain(state, chainparams)) {
+                throw std::runtime_error(strprintf("ActivateBestChain failed. (%s)", FormatStateMessage(state)));
+            }
+        }
+        nScriptCheckThreads = 3;
+        StartScriptCheck();
+        g_connman = MakeUnique<CConnman>(0x1337, 0x1337); // Deterministic randomness for tests.
+        connman = g_connman.get();
+        peerLogic.reset(new PeerLogicValidation(connman, scheduler, /*enable_bip61=*/true));
+>>>>>>> refactor: Replace boost::thread with InterruptibleThread:src/test/test_bitcoin.cpp
 }
 
 TestingSetup::~TestingSetup()
 {
+<<<<<<< HEAD:src/test/setup_common.cpp
     threadGroup.interrupt_all();
     threadGroup.join_all();
     GetMainSignals().FlushBackgroundCallbacks();
@@ -121,6 +154,22 @@ TestingSetup::~TestingSetup()
     m_node.banman.reset();
     UnloadBlockIndex();
     g_chainstate.reset();
+=======
+    InterruptScriptCheck();
+    for (auto& th : threadGroup)
+        th.interrupt();
+    scheduler.stop();
+    StopScriptCheck();
+    for (auto& th : threadGroup)
+        th.join();
+    GetMainSignals().FlushBackgroundCallbacks();
+    GetMainSignals().UnregisterBackgroundSignalScheduler();
+    g_connman.reset();
+    peerLogic.reset();
+    UnloadBlockIndex();
+    pcoinsTip.reset();
+    pcoinsdbview.reset();
+>>>>>>> refactor: Replace boost::thread with InterruptibleThread:src/test/test_bitcoin.cpp
     pblocktree.reset();
 }
 

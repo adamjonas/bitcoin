@@ -20,6 +20,7 @@
 #include <fs.h>
 #include <logging.h>
 #include <sync.h>
+#include <threadinterrupt.h>
 #include <tinyformat.h>
 #include <util/memory.h>
 #include <util/threadnames.h>
@@ -32,8 +33,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
 
 // Application startup time (used for uptime calculation)
 int64_t GetStartupTime();
@@ -345,9 +344,7 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
         LogPrintf("%s thread start\n", name);
         func();
         LogPrintf("%s thread exit\n", name);
-    }
-    catch (const boost::thread_interrupted&)
-    {
+    } catch (const ThreadInterrupted&) {
         LogPrintf("%s thread interrupt\n", name);
         throw;
     }

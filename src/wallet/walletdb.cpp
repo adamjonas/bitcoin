@@ -488,8 +488,7 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
                 pwallet->WalletLogPrintf("%s\n", strErr);
         }
         pcursor->close();
-    }
-    catch (const boost::thread_interrupted&) {
+    } catch (const ThreadInterrupted&) {
         throw;
     }
     catch (...) {
@@ -593,8 +592,7 @@ DBErrors WalletBatch::FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CW
             }
         }
         pcursor->close();
-    }
-    catch (const boost::thread_interrupted&) {
+    } catch (const ThreadInterrupted&) {
         throw;
     }
     catch (...) {

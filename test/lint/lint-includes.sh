@@ -53,7 +53,6 @@ EXPECTED_BOOST_INCLUDES=(
     boost/algorithm/string/classification.hpp
     boost/algorithm/string/replace.hpp
     boost/algorithm/string/split.hpp
-    boost/chrono/chrono.hpp
     boost/date_time/posix_time/posix_time.hpp
     boost/filesystem.hpp
     boost/filesystem/fstream.hpp
@@ -69,8 +68,6 @@ EXPECTED_BOOST_INCLUDES=(
     boost/signals2/signal.hpp
     boost/test/unit_test.hpp
     boost/thread.hpp
-    boost/thread/condition_variable.hpp
-    boost/thread/thread.hpp
     boost/variant.hpp
     boost/variant/apply_visitor.hpp
     boost/variant/static_visitor.hpp
