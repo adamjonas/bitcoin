@@ -1768,9 +1768,27 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
-void ThreadScriptCheck(int worker_num) {
-    util::ThreadRename(strprintf("scriptch.%i", worker_num));
-    scriptcheckqueue.Thread();
+void StartScriptCheck()
+{
+    LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
+    if (nScriptCheckThreads) {
+        for (int i = 0; i < nScriptCheckThreads - 1; i++) {
+            g_thread_scriptcheck_workers.emplace_back(ThreadScriptCheck);
+        }
+    }
+}
+
+void InterruptScriptCheck()
+{
+    scriptcheckqueue.Interrupt();
+}
+
+void StopScriptCheck()
+{
+    for (auto& th : g_thread_scriptcheck_workers) {
+        th.join();
+    }
+    g_thread_scriptcheck_workers.clear();
 }
 
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);

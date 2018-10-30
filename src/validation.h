@@ -238,8 +238,13 @@ bool LoadGenesisBlock(const CChainParams& chainparams);
 bool LoadBlockIndex(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 /** Unload database information */
 void UnloadBlockIndex();
-/** Run an instance of the script checking thread */
-void ThreadScriptCheck(int worker_num);
+/** Start script checking threads */
+void StartScriptCheck();
+/** Interrupt script checking threads */
+void InterruptScriptCheck();
+/** Stop script checking threads */
+void StopScriptCheck();
+/** Check whether we are doing an initial block download (synchronizing from disk or network) */
 /** Retrieve a transaction (from memory pool, or from disk, if possible) */
 bool GetTransaction(const uint256& hash, CTransactionRef& tx, const Consensus::Params& params, uint256& hashBlock, const CBlockIndex* const blockIndex = nullptr);
 /**
