@@ -1771,11 +1771,7 @@ static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 void StartScriptCheck()
 {
     LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
-    if (nScriptCheckThreads) {
-        for (int i = 0; i < nScriptCheckThreads - 1; i++) {
-            g_thread_scriptcheck_workers.emplace_back(ThreadScriptCheck);
-        }
-    }
+    scriptcheckqueue.Start(nScriptCheckThreads - 1, "bitcoin-scriptch");
 }
 
 void InterruptScriptCheck()
@@ -1785,10 +1781,7 @@ void InterruptScriptCheck()
 
 void StopScriptCheck()
 {
-    for (auto& th : g_thread_scriptcheck_workers) {
-        th.join();
-    }
-    g_thread_scriptcheck_workers.clear();
+    scriptcheckqueue.Stop();
 }
 
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);
