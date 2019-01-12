@@ -567,13 +567,19 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             raise SkipTest("wallet has not been compiled.")
 
     def skip_if_no_cli(self):
-        """Skip the running test if bitcoin-cli has not been compiled."""
-        if not self.is_cli_compiled():
+        """Skip the running test if bitcoin-cli is not available."""
+        if not self.is_cli_available():
             raise SkipTest("bitcoin-cli has not been compiled.")
 
-    def is_cli_compiled(self):
-        """Checks whether bitcoin-cli was compiled."""
-        return self.config["components"].getboolean("ENABLE_CLI")
+    def is_cli_available(self):
+        """Checks whether bitcoin-cli is available."""
+        if os.getenv("BITCOINCLI") is not None:
+            return True
+
+        config = configparser.ConfigParser()
+        config.read_file(open(self.options.configfile))
+
+        return config["components"].getboolean("ENABLE_CLI")
 
     def is_wallet_compiled(self):
         """Checks whether the wallet module was compiled."""
