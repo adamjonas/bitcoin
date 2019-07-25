@@ -180,25 +180,6 @@ protected:
         return QAbstractSpinBox::event(event);
     }
 
-    StepEnabled stepEnabled() const
-    {
-        if (isReadOnly()) // Disable steps when AmountSpinBox is read-only
-            return StepNone;
-        if (text().isEmpty()) // Allow step-up with empty field
-            return StepUpEnabled;
-
-        StepEnabled rv = StepNone;
-        bool valid = false;
-        CAmount val = value(&valid);
-        if (valid) {
-            if (val > m_min_amount)
-                rv |= StepDownEnabled;
-            if (val < m_max_amount)
-                rv |= StepUpEnabled;
-        }
-        return rv;
-    }
-
 Q_SIGNALS:
     void valueChanged();
 };
