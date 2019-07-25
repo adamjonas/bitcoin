@@ -86,15 +86,6 @@ public:
         m_max_amount = value;
     }
 
-    void stepBy(int steps)
-    {
-        bool valid = false;
-        CAmount val = value(&valid);
-        val = val + steps * singleStep;
-        val = qBound(m_min_amount, val, m_max_amount);
-        setValue(val);
-    }
-
     void setDisplayUnit(int unit)
     {
         bool valid = false;
