@@ -40,26 +40,6 @@ public:
         return valid ? QValidator::Intermediate : QValidator::Invalid;
     }
 
-    void fixup(QString &input) const
-    {
-        bool valid;
-        CAmount val;
-
-        if (input.isEmpty() && !m_allow_empty) {
-            valid = true;
-            val = m_min_amount;
-        } else {
-            valid = false;
-            val = parse(input, &valid);
-        }
-
-        if (valid) {
-            val = qBound(m_min_amount, val, m_max_amount);
-            input = BitcoinUnits::format(currentUnit, val, false, BitcoinUnits::separatorAlways);
-            lineEdit()->setText(input);
-        }
-    }
-
     CAmount value(bool *valid_out=nullptr) const
     {
         return parse(text(), valid_out);
