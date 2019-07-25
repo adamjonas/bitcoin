@@ -51,9 +51,6 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const;
-
 private:
     QDateTime dateFrom;
     QDateTime dateTo;
