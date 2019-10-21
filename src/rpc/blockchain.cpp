@@ -1612,6 +1612,7 @@ static UniValue getchaintxstats(const JSONRPCRequest& request)
     }
 
     const CBlockIndex* pindexPast = pindex->GetAncestor(pindex->nHeight - blockcount);
+    assert(pindexPast != nullptr);
     int nTimeDiff = pindex->GetMedianTimePast() - pindexPast->GetMedianTimePast();
     int nTxDiff = pindex->nChainTx - pindexPast->nChainTx;
 
