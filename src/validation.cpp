@@ -109,6 +109,7 @@ CBlockIndex *pindexBestHeader = nullptr;
 Mutex g_best_block_mutex;
 std::condition_variable g_best_block_cv;
 uint256 g_best_block;
+int nScriptCheckThreads = 0;
 bool g_parallel_script_checks{false};
 std::atomic_bool fImporting(false);
 std::atomic_bool fReindex(false);
@@ -1770,11 +1771,23 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
-void ThreadScriptCheck(int worker_num) {
-    util::ThreadRename(strprintf("scriptch.%i", worker_num));
-    scriptcheckqueue.Thread();
+void StartScriptCheck()
+{
+    LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
+    scriptcheckqueue.Start(nScriptCheckThreads - 1, "bitcoin-scriptch");
 }
 
+void InterruptScriptCheck()
+{
+    scriptcheckqueue.Interrupt();
+}
+
+void StopScriptCheck()
+{
+    scriptcheckqueue.Stop();
+}
+
+// Protected by cs_main
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);
 
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)
