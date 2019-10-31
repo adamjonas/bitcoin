@@ -1258,7 +1258,6 @@ bool AppInitMain(NodeContext& node)
     InitSignatureCache();
     InitScriptExecutionCache();
 
-    LogPrintf("Script verification uses %d additional threads\n", std::max(nScriptCheckThreads - 1, 0));
     StartScriptCheck();
 
     // Start the lightweight task scheduler thread
