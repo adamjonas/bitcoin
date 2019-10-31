@@ -109,6 +109,7 @@ CBlockIndex *pindexBestHeader = nullptr;
 Mutex g_best_block_mutex;
 std::condition_variable g_best_block_cv;
 uint256 g_best_block;
+int script_threads = 0;
 bool g_parallel_script_checks{false};
 std::atomic_bool fImporting(false);
 std::atomic_bool fReindex(false);
@@ -1769,12 +1770,37 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 }
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
+static std::vector<std::thread> g_thread_scriptcheck_workers;
 
-void ThreadScriptCheck(int worker_num) {
-    util::ThreadRename(strprintf("scriptch.%i", worker_num));
+static void ThreadScriptCheck() {
+    util::ThreadRename(strprintf("scriptch.%i"));
     scriptcheckqueue.Thread();
 }
 
+void StartScriptCheck()
+{
+    LogPrintf("Using %u threads for script verification\n", script_threads);
+    for (int i = 0; i < script_threads; ++i) {
+        g_thread_scriptcheck_workers.emplace_back(ThreadScriptCheck);
+    }
+    // Set g_parallel_script_checks to true so they are used.
+    g_parallel_script_checks = true;
+}
+
+void InterruptScriptCheck()
+{
+    scriptcheckqueue.Interrupt();
+}
+
+void StopScriptCheck()
+{
+    for (auto& th : g_thread_scriptcheck_workers) {
+        th.join();
+    }
+    g_thread_scriptcheck_workers.clear();
+}
+
+// Protected by cs_main
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);
 
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)

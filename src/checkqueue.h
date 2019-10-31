@@ -6,6 +6,7 @@
 #define BITCOIN_CHECKQUEUE_H
 
 #include <sync.h>
+#include <threadinterrupt.h>
 
 #include <algorithm>
 #include <vector>
@@ -52,6 +53,8 @@ private:
     //! The temporary evaluation result.
     bool fAllOk;
 
+    CThreadInterrupt interruptQueue;
+
     /**
      * Number of verifications that haven't completed yet.
      * This includes elements that are no longer queued, but still in the
@@ -90,14 +93,17 @@ private:
                         nTotal--;
                         bool fRet = fAllOk;
                         // reset the status for new work later
-                        if (fMaster)
-                            fAllOk = true;
+                        fAllOk = true;
                         // return the current status
                         return fRet;
+                    } else if (!fMaster && interruptQueue) {
+                        nTotal--;
+                        return false;
+                    } else {
+                        nIdle++;
+                        cond.wait(lock); // wait
+                        nIdle--;
                     }
-                    nIdle++;
-                    cond.wait(lock); // wait
-                    nIdle--;
                 }
                 // Decide how many work units to process now.
                 // * Do not try to do everything at once, but aim for increasingly smaller batches so
@@ -155,6 +161,11 @@ public:
             condWorker.notify_one();
         else if (vChecks.size() > 1)
             condWorker.notify_all();
+    }
+
+    void Interrupt()
+    {
+        interruptQueue();
     }
 
     ~CCheckQueue()

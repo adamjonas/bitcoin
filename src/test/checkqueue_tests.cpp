@@ -166,7 +166,7 @@ static void Correct_Queue_range(std::vector<size_t> range)
             BOOST_REQUIRE_EQUAL(FakeCheckCheckCompletion::n_calls, i);
         }
     }
-    tg.interrupt_all();
+    small_queue->Interrupt();
     tg.join_all();
 }
 
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Catches_Failure)
             BOOST_REQUIRE(success);
         }
     }
-    tg.interrupt_all();
+    fail_queue->Interrupt();
     tg.join_all();
 }
 // Test that a block validation which fails does not interfere with
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Recovers_From_Failure)
             BOOST_REQUIRE(r != end_fails);
         }
     }
-    tg.interrupt_all();
+    fail_queue->Interrupt();
     tg.join_all();
 }
 
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_UniqueCheck)
     for (size_t i = 0; i < COUNT; ++i)
         r = r && UniqueCheck::results.count(i) == 1;
     BOOST_REQUIRE(r);
-    tg.interrupt_all();
+    queue->Interrupt();
     tg.join_all();
 }
 
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Memory)
         }
         BOOST_REQUIRE_EQUAL(MemoryCheck::fake_allocated_memory, 0U);
     }
-    tg.interrupt_all();
+    queue->Interrupt();
     tg.join_all();
 }
 
@@ -372,7 +372,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_FrozenCleanup)
     FrozenCleanupCheck::cv.notify_one();
     // Wait for control to finish
     t0.join();
-    tg.interrupt_all();
+    queue->Interrupt();
     tg.join_all();
     BOOST_REQUIRE(!fails);
 }
