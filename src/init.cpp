@@ -154,6 +154,7 @@ static CScheduler scheduler;
 
 void Interrupt(NodeContext& node)
 {
+    InterruptScriptCheck();
     InterruptHTTPServer();
     InterruptHTTPRPC();
     InterruptRPC();
@@ -183,6 +184,7 @@ void Shutdown(NodeContext& node)
     util::ThreadRename("shutoff");
     mempool.AddTransactionsUpdated(1);
 
+    StopScriptCheck();
     StopHTTPRPC();
     StopREST();
     StopRPC();
@@ -1257,10 +1259,7 @@ bool AppInitMain(NodeContext& node)
     InitScriptExecutionCache();
 
     LogPrintf("Script verification uses %d additional threads\n", std::max(nScriptCheckThreads - 1, 0));
-    if (nScriptCheckThreads) {
-        for (int i=0; i<nScriptCheckThreads-1; i++)
-            threadGroup.create_thread([i]() { return ThreadScriptCheck(i); });
-    }
+    StartScriptCheck();
 
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = std::bind(&CScheduler::serviceQueue, &scheduler);
