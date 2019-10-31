@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chainparams.h>
+#include <chainparams.h>
 #include <index/txindex.h>
 #include <script/standard.h>
 #include <test/setup_common.h>
@@ -70,8 +71,12 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
     // shutdown sequence (c.f. Shutdown() in init.cpp)
     txindex.Stop();
 
-    threadGroup.interrupt_all();
-    threadGroup.join_all();
+    for (auto& th : threadGroup) {
+        th.interrupt();
+    }
+    for (auto& th : threadGroup) {
+        th.join();
+    }
 
     // Rest of shutdown sequence and destructors happen in ~TestingSetup()
 }

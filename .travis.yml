@@ -132,33 +132,13 @@ jobs:
     - stage: test
       name: 'x86_64 Linux  [GOAL: install]  [bionic]  [no depends, only system libs, sanitizers: fuzzer,address,undefined]'
       env: >-
-<<<<<<< HEAD
         FILE_ENV="./ci/test/00_setup_env_amd64_fuzz.sh"
 
-=======
-        HOST=x86_64-unknown-linux-gnu
-        PACKAGES="python3-zmq qtbase5-dev qttools5-dev-tools libssl1.0-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler libqrencode-dev"
-        NO_DEPENDS=1
-        GOAL="install"
-        BITCOIN_CONFIG="--enable-zmq --with-incompatible-bdb --enable-glibc-back-compat --enable-reduce-exports --with-gui=qt5 CPPFLAGS=-DDEBUG_LOCKORDER"
-# x86_64 Linux (sanitizers)
->>>>>>> build: Remove boost::chrono from build system
     - stage: test
       name: 'x86_64 Linux  [GOAL: install]  [bionic]  [no wallet]'
       env: >-
-<<<<<<< HEAD
         FILE_ENV="./ci/test/00_setup_env_amd64_nowallet.sh"
 
-=======
-        HOST=x86_64-unknown-linux-gnu
-        PACKAGES="clang python3-zmq qtbase5-dev qttools5-dev-tools libssl1.0-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler libqrencode-dev"
-        NO_DEPENDS=1
-        RUN_BENCH=true
-        RUN_FUNCTIONAL_TESTS=false # Disabled for now, can be combined with the other x86_64 linux NO_DEPENDS job when functional tests pass the sanitizers
-        GOAL="install"
-        BITCOIN_CONFIG="--enable-zmq --with-incompatible-bdb --enable-glibc-back-compat --enable-reduce-exports --with-gui=qt5 CPPFLAGS=-DDEBUG_LOCKORDER --with-sanitizers=undefined CC=clang CXX=clang++"
-# x86_64 Linux, No wallet
->>>>>>> build: Remove boost::chrono from build system
     - stage: test
       name: 'macOS 10.10  [GOAL: deploy] [no functional tests]'
       env: >-

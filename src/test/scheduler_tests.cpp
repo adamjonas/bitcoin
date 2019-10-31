@@ -8,10 +8,6 @@
 
 #include <test/setup_common.h>
 
-<<<<<<< HEAD
-#include <boost/thread.hpp>
-=======
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(scheduler_tests)
@@ -66,13 +62,8 @@ BOOST_AUTO_TEST_CASE(manythreads)
         std::chrono::system_clock::time_point tReschedule = now + std::chrono::microseconds(500 + randomMsec(rng));
         int whichCounter = zeroToNine(rng);
         CScheduler::Function f = std::bind(&microTask, std::ref(microTasks),
-<<<<<<< HEAD
                                              std::ref(counterMutex[whichCounter]), std::ref(counter[whichCounter]),
                                              randomDelta(rng), tReschedule);
-=======
-            std::ref(counterMutex[whichCounter]), std::ref(counter[whichCounter]),
-            randomDelta(rng), tReschedule);
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
         microTasks.schedule(f, t);
     }
     nTasks = microTasks.getQueueInfo(first, last);
@@ -81,39 +72,24 @@ BOOST_AUTO_TEST_CASE(manythreads)
     BOOST_CHECK(last > now);
 
     // As soon as these are created they will start running and servicing the queue
-<<<<<<< HEAD
-    boost::thread_group microThreads;
-    for (int i = 0; i < 5; i++)
-        microThreads.create_thread(std::bind(&CScheduler::serviceQueue, &microTasks));
-=======
     std::vector<InterruptibleThread> microThreads;
     for (int i = 0; i < 5; i++) {
         microThreads.emplace_back(std::bind(&CScheduler::serviceQueue, &microTasks));
     }
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
 
     MicroSleep(600);
     now = std::chrono::system_clock::now();
 
     // More threads and more tasks:
     for (int i = 0; i < 5; i++)
-<<<<<<< HEAD
-        microThreads.create_thread(std::bind(&CScheduler::serviceQueue, &microTasks));
-=======
         microThreads.emplace_back(std::bind(&CScheduler::serviceQueue, &microTasks));
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
     for (int i = 0; i < 100; i++) {
         std::chrono::system_clock::time_point t = now + std::chrono::microseconds(randomMsec(rng));
         std::chrono::system_clock::time_point tReschedule = now + std::chrono::microseconds(500 + randomMsec(rng));
         int whichCounter = zeroToNine(rng);
         CScheduler::Function f = std::bind(&microTask, std::ref(microTasks),
-<<<<<<< HEAD
                                              std::ref(counterMutex[whichCounter]), std::ref(counter[whichCounter]),
                                              randomDelta(rng), tReschedule);
-=======
-            std::ref(counterMutex[whichCounter]), std::ref(counter[whichCounter]),
-            randomDelta(rng), tReschedule);
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
         microTasks.schedule(f, t);
     }
 
@@ -144,11 +120,7 @@ BOOST_AUTO_TEST_CASE(singlethreadedscheduler_ordered)
     // if they don't we'll get out of order behaviour
     std::vector<InterruptibleThread> threads;
     for (int i = 0; i < 5; ++i) {
-<<<<<<< HEAD
-        threads.create_thread(std::bind(&CScheduler::serviceQueue, &scheduler));
-=======
         threads.emplace_back(std::bind(&CScheduler::serviceQueue, &scheduler));
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
     }
 
     // these are not atomic, if SinglethreadedSchedulerClient prevents

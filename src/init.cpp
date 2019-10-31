@@ -69,12 +69,6 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
-<<<<<<< HEAD
-#include <boost/thread.hpp>
-=======
-#include <boost/bind.hpp>
-#include <openssl/crypto.h>
->>>>>>> refactor: Replace boost::thread with InterruptibleThread
 
 #if ENABLE_ZMQ
 #include <zmq/zmqabstractnotifier.h>
@@ -159,7 +153,6 @@ static CScheduler scheduler;
 
 void Interrupt(NodeContext& node)
 {
-    InterruptScriptCheck();
     InterruptHTTPServer();
     InterruptHTTPRPC();
     InterruptRPC();
@@ -189,7 +182,6 @@ void Shutdown(NodeContext& node)
     util::ThreadRename("shutoff");
     mempool.AddTransactionsUpdated(1);
 
-    StopScriptCheck();
     StopHTTPRPC();
     StopREST();
     StopRPC();
@@ -1268,11 +1260,9 @@ bool AppInitMain(NodeContext& node)
     InitSignatureCache();
     InitScriptExecutionCache();
 
-    StartScriptCheck();
-
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = std::bind(&CScheduler::serviceQueue, &scheduler);
-    threadGroup.create_thread(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
+    threadGroup.emplace_back(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
     GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
     GetMainSignals().RegisterWithMempoolSignals(mempool);
@@ -1722,7 +1712,7 @@ bool AppInitMain(NodeContext& node)
         vImportFiles.push_back(strFile);
     }
 
-    threadGroup.create_thread(std::bind(&ThreadImport, vImportFiles));
+    threadGroup.emplace_back(std::bind(&ThreadImport, vImportFiles));
 
     // Wait for genesis block to be processed
     {

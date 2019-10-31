@@ -31,7 +31,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "qt/guiutil -> qt/walletmodel -> qt/optionsmodel -> qt/guiutil"
     "txmempool -> validation -> validationinterface -> txmempool"
     "wallet/scriptpubkeyman -> wallet/wallet -> wallet/scriptpubkeyman"
-    "logging -> utiltime -> threadinterrupt -> sync -> logging
+    "logging -> utiltime -> threadinterrupt -> sync -> logging"
 )
 
 EXIT_CODE=0

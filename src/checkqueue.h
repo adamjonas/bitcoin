@@ -8,6 +8,7 @@
 #include <sync.h>
 
 #include <util.h>
+#include <util/threadnames.h>
 
 #include <algorithm>
 #include <vector>
@@ -144,6 +145,12 @@ public:
     //! Create a new check queue
     explicit CCheckQueue(unsigned int nBatchSizeIn) : nBatchSize(nBatchSizeIn) {}
 
+    //! Worker thread
+    void Thread()
+    {
+        Loop();
+    }
+
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
@@ -176,7 +183,7 @@ public:
         m_threads.reserve(n_threads);
         for (int i = 0; i < n_threads; i++) {
             m_threads.emplace_back([thread_name, this] {
-                if (thread_name != nullptr) RenameThread(thread_name);
+                if (thread_name != nullptr) util::ThreadRename(thread_name);
                 Loop();
             });
         }

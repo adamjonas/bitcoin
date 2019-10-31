@@ -10,6 +10,7 @@
 #include <util/time.h>
 
 #include <atomic>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <ctime>
 #include <threadinterrupt.h>
 #include <tinyformat.h>

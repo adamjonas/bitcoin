@@ -1767,20 +1767,9 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
-void StartScriptCheck()
-{
-    LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
-    scriptcheckqueue.Start(nScriptCheckThreads - 1, "bitcoin-scriptch");
-}
-
-void InterruptScriptCheck()
-{
-    scriptcheckqueue.Interrupt();
-}
-
-void StopScriptCheck()
-{
-    scriptcheckqueue.Stop();
+void ThreadScriptCheck(int worker_num) {
+    util::ThreadRename(strprintf("scriptch.%i", worker_num));
+    scriptcheckqueue.Thread();
 }
 
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);
