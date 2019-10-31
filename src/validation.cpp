@@ -1767,21 +1767,11 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 }
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
-static std::vector<std::thread> g_thread_scriptcheck_workers;
-
-void ThreadScriptCheck(int worker_num) {
-    util::ThreadRename(strprintf("scriptch.%i", worker_num));
-    scriptcheckqueue.Thread();
-}
 
 void StartScriptCheck()
 {
     LogPrintf("Using %u threads for script verification\n", nScriptCheckThreads);
-    if (nScriptCheckThreads) {
-        for (int i = 0; i < nScriptCheckThreads - 1; i++) {
-            g_thread_scriptcheck_workers.emplace_back();
-        }
-    }
+    scriptcheckqueue.Start(nScriptCheckThreads - 1, "bitcoin-scriptch");
 }
 
 void InterruptScriptCheck()
@@ -1791,10 +1781,7 @@ void InterruptScriptCheck()
 
 void StopScriptCheck()
 {
-    for (auto& th : g_thread_scriptcheck_workers) {
-        th.join();
-    }
-    g_thread_scriptcheck_workers.clear();
+    scriptcheckqueue.Stop();
 }
 
 // Protected by cs_main
