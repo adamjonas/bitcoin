@@ -72,6 +72,15 @@ class TestBitcoinCli(BitcoinTestFramework):
             assert_equal(cli_get_info['relayfee'], network_info['relayfee'])
             # unlocked_until is not tested because the wallet is not encrypted
 
+        # self.log.info("Make sure that -getinfo without arguments fails")
+        # assert_raises_process_error(1, "-generate requires an the number of blocks you wish to generate", self.nodes[0].cli('-generate'))
+
+        self.log.info("Compare responses from `bitcoin-cli -generate` and the RPCs data is retrieved from.")
+        node = self.nodes[0]
+        # cli_generate = node.generate(101)
+        node.cli('-generate', 101)
+        assert_equal(node.getbalance(), 50)
+
 
 if __name__ == '__main__':
     TestBitcoinCli().main()

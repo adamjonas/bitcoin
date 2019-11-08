@@ -47,6 +47,7 @@ static void SetupCliArgs()
     gArgs.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-getinfo", "Get general information from the remote server. Note that unlike server-side RPC calls, the results of -getinfo is the result of multiple non-atomic requests. Some entries in the result may represent results from different states (e.g. wallet balance may be as of a different block from the chain state reported)", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-generate", "generates to wallet", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     SetupChainParamsBaseOptions();
     gArgs.AddArg("-named", strprintf("Pass named instead of positional arguments (default: %s)", DEFAULT_NAMED), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-rpcclienttimeout=<n>", strprintf("Timeout in seconds during HTTP requests, or 0 for no timeout. (default: %d)", DEFAULT_HTTP_CLIENT_TIMEOUT), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
@@ -281,6 +282,35 @@ public:
     }
 };
 
+class GenerateRequestHandler: public BaseRequestHandler
+{
+public:
+    const int N_BLOCKS = 0;
+    const int ADDRESS = 1;
+
+    /** Create a simulated `getinfo` request. */
+    UniValue PrepareRequest(const std::string& method, const std::vector<std::string>& args) override
+    {
+        if (args.empty()) {
+            throw std::runtime_error("-generate requires an the number of blocks you wish to generate");
+        }
+        UniValue result(UniValue::VARR);
+        std::cout << "@@@@@@@@@@";
+
+        result.push_back(JSONRPCRequestObj("getnewaddress", NullUniValue, args[0]));
+        // result.push_back(JSONRPCRequestObj("getwalletinfo", NullUniValue, ID_WALLETINFO));
+        return result;
+    }
+
+    /** Collect values from the batch and form a simulated `getinfo` reply. */
+    UniValue ProcessReply(const UniValue &batch_in) override
+    {
+        UniValue result(UniValue::VOBJ);
+        std::vector<UniValue> batch = JSONRPCProcessBatchReply(batch_in, 2);
+        return JSONRPCReplyObj(result, NullUniValue, 1);
+     }
+};
+
 /** Process default single requests */
 class DefaultRequestHandler: public BaseRequestHandler {
 public:
@@ -474,6 +504,9 @@ static int CommandLineRPC(int argc, char *argv[])
         if (gArgs.GetBoolArg("-getinfo", false)) {
             rh.reset(new GetinfoRequestHandler());
             method = "";
+        } else if (gArgs.GetBoolArg("-generate", false)) {
+              rh.reset(new GenerateRequestHandler());
+              method = "";
         } else {
             rh.reset(new DefaultRequestHandler());
             if (args.size() < 1) {
