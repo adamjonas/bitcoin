@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#if defined(__x86_64__) || defined(__amd64__)
+#if(__x86_64__) || defined(__amd64__)
 
 namespace sha256_sse4
 {

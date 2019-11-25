@@ -148,7 +148,7 @@ namespace tfm = tinyformat;
 #   endif
 #endif
 
-#if defined(__GLIBCXX__) && __GLIBCXX__ < 20080201
+#if(__GLIBCXX__) && __GLIBCXX__ < 20080201
 //  std::showpos is broken on old libstdc++ as provided with OSX.  See
 //  http://gcc.gnu.org/ml/libstdc++/2007-11/msg00075.html
 #   define TINYFORMAT_OLD_LIBSTDCPLUSPLUS_WORKAROUND

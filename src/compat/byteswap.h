@@ -5,17 +5,17 @@
 #ifndef BITCOIN_COMPAT_BYTESWAP_H
 #define BITCOIN_COMPAT_BYTESWAP_H
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
 #include <stdint.h>
 
-#if defined(HAVE_BYTESWAP_H)
+#if(HAVE_BYTESWAP_H)
 #include <byteswap.h>
 #endif
 
-#if defined(MAC_OSX)
+#if(MAC_OSX)
 
 #include <libkern/OSByteOrder.h>
 #define bswap_16(x) OSSwapInt16(x)

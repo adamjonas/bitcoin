@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <string>
-#if defined WIN32 && defined __GLIBCXX__
+#if WIN32 && defined __GLIBCXX__
 #include <ext/stdio_filebuf.h>
 #endif
 
@@ -58,7 +58,7 @@ namespace fsbridge {
     // with an upgrade to C++17, where streams can be constructed directly from
     // `std::filesystem::path` objects.
 
-#if defined WIN32 && defined __GLIBCXX__
+#if WIN32 && defined __GLIBCXX__
     class ifstream : public std::istream
     {
     public:

@@ -2,11 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
-#if defined(HAVE_SYS_SELECT_H)
+#if(HAVE_SYS_SELECT_H)
 #ifdef HAVE_CSTRING_DEPENDENT_FD_ZERO
 #include <cstring>
 #endif

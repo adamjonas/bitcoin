@@ -7,7 +7,7 @@
 
 BOOST_FIXTURE_TEST_SUITE(compilerbug_tests, BasicTestingSetup)
 
-#if defined(__GNUC__)
+#if(__GNUC__)
 // This block will also be built under clang, which is fine (as it supports noinline)
 void __attribute__ ((noinline)) set_one(unsigned char* ptr)
 {

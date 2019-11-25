@@ -3,7 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -120,7 +120,7 @@ static bool AppInit(int argc, char* argv[])
         if (gArgs.GetBoolArg("-daemon", false))
         {
 #if HAVE_DECL_DAEMON
-#if defined(MAC_OSX)
+#if(MAC_OSX)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
@@ -130,7 +130,7 @@ static bool AppInit(int argc, char* argv[])
             if (daemon(1, 0)) { // don't chdir (1), do close FDs (0)
                 return InitError(strprintf("daemon() failed: %s\n", strerror(errno)));
             }
-#if defined(MAC_OSX)
+#if(MAC_OSX)
 #pragma GCC diagnostic pop
 #endif
 #else

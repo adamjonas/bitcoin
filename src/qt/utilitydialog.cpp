@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -118,7 +118,7 @@ void HelpMessageDialog::printToConsole()
 
 void HelpMessageDialog::showOrPrint()
 {
-#if defined(WIN32)
+#if(WIN32)
     // On Windows, show a message box, as there is no stderr/stdout in windowed applications
     exec();
 #else

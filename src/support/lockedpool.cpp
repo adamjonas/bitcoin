@@ -5,7 +5,7 @@
 #include <support/lockedpool.h>
 #include <support/cleanse.h>
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -230,7 +230,7 @@ private:
 PosixLockedPageAllocator::PosixLockedPageAllocator()
 {
     // Determine system page size in bytes
-#if defined(PAGESIZE) // defined in limits.h
+#if(PAGESIZE) // defined in limits.h
     page_size = PAGESIZE;
 #else                   // assume some POSIX OS
     page_size = sysconf(_SC_PAGESIZE);

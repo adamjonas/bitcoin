@@ -15,7 +15,7 @@
 #include <univalue.h>
 #include <validation.h>
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 

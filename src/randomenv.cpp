@@ -3,7 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -326,7 +326,7 @@ void RandAddStaticEnv(CSHA512& hasher)
 {
     // Some compile-time static properties
     hasher << (CHAR_MIN < 0) << sizeof(void*) << sizeof(long) << sizeof(int);
-#if defined(__GNUC__) && defined(__GNUC_MINOR__) && defined(__GNUC_PATCHLEVEL__)
+#if(__GNUC__) && defined(__GNUC_MINOR__) && defined(__GNUC_PATCHLEVEL__)
     hasher << __GNUC__ << __GNUC_MINOR__ << __GNUC_PATCHLEVEL__;
 #endif
 #ifdef _MSC_VER

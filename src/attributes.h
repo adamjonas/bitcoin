@@ -6,7 +6,7 @@
 #ifndef BITCOIN_ATTRIBUTES_H
 #define BITCOIN_ATTRIBUTES_H
 
-#if defined(__has_cpp_attribute)
+#if(__has_cpp_attribute)
 #  if __has_cpp_attribute(nodiscard)
 #    define NODISCARD [[nodiscard]]
 #  endif

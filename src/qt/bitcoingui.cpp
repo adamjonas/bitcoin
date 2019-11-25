@@ -63,7 +63,7 @@
 
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
-#if defined(Q_OS_MAC)
+#if(Q_OS_MAC)
         "macosx"
 #elif defined(Q_OS_WIN)
         "windows"

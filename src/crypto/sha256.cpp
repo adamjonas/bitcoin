@@ -10,8 +10,8 @@
 
 #include <compat/cpuid.h>
 
-#if defined(__x86_64__) || defined(__amd64__) || defined(__i386__)
-#if defined(USE_ASM)
+#if(__x86_64__) || defined(__amd64__) || defined(__i386__)
+#if(USE_ASM)
 namespace sha256_sse4
 {
 void Transform(uint32_t* s, const unsigned char* chunk, size_t blocks);
@@ -547,7 +547,7 @@ bool SelfTest() {
     return true;
 }
 
-#if defined(USE_ASM) && (defined(__x86_64__) || defined(__amd64__) || defined(__i386__))
+#if(USE_ASM) && (defined(__x86_64__) || defined(__amd64__) || defined(__i386__))
 /** Check whether the OS has enabled AVX registers. */
 bool AVXEnabled()
 {
@@ -562,7 +562,7 @@ bool AVXEnabled()
 std::string SHA256AutoDetect()
 {
     std::string ret = "standard";
-#if defined(USE_ASM) && defined(HAVE_GETCPUID)
+#if(USE_ASM) && defined(HAVE_GETCPUID)
     bool have_sse4 = false;
     bool have_xsave = false;
     bool have_avx = false;
@@ -592,7 +592,7 @@ std::string SHA256AutoDetect()
         have_shani = (ebx >> 29) & 1;
     }
 
-#if defined(ENABLE_SHANI) && !defined(BUILD_BITCOIN_INTERNAL)
+#if(ENABLE_SHANI) && !defined(BUILD_BITCOIN_INTERNAL)
     if (have_shani) {
         Transform = sha256_shani::Transform;
         TransformD64 = TransformD64Wrapper<sha256_shani::Transform>;
@@ -604,7 +604,7 @@ std::string SHA256AutoDetect()
 #endif
 
     if (have_sse4) {
-#if defined(__x86_64__) || defined(__amd64__)
+#if(__x86_64__) || defined(__amd64__)
         Transform = sha256_sse4::Transform;
         TransformD64 = TransformD64Wrapper<sha256_sse4::Transform>;
         ret = "sse4(1way)";

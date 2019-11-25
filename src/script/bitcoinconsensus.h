@@ -8,11 +8,11 @@
 
 #include <stdint.h>
 
-#if defined(BUILD_BITCOIN_INTERNAL) && defined(HAVE_CONFIG_H)
+#if(BUILD_BITCOIN_INTERNAL) && defined(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
-  #if defined(_WIN32)
-    #if defined(DLL_EXPORT)
-      #if defined(HAVE_FUNC_ATTRIBUTE_DLLEXPORT)
+  #if(_WIN32)
+    #if(DLL_EXPORT)
+      #if(HAVE_FUNC_ATTRIBUTE_DLLEXPORT)
         #define EXPORT_SYMBOL __declspec(dllexport)
       #else
         #define EXPORT_SYMBOL

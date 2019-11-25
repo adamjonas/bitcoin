@@ -32,10 +32,10 @@
 #include <sys/syscall.h>
 #include <linux/random.h>
 #endif
-#if defined(HAVE_GETENTROPY) || (defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX))
+#if(HAVE_GETENTROPY) || (defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX))
 #include <unistd.h>
 #endif
-#if defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
+#if(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
 #include <sys/random.h>
 #endif
 #ifdef HAVE_SYSCTL_ARND
@@ -53,7 +53,7 @@ static inline int64_t GetPerformanceCounter() noexcept
 {
     // Read the hardware time stamp counter when available.
     // See https://en.wikipedia.org/wiki/Time_Stamp_Counter for more information.
-#if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
+#if(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
     return __rdtsc();
 #elif !defined(_MSC_VER) && defined(__i386__)
     uint64_t r = 0;
@@ -186,7 +186,7 @@ static void ReportHardwareRand() {}
 
 /** Add 64 bits of entropy gathered from hardware to hasher. Do nothing if not supported. */
 static void SeedHardwareFast(CSHA512& hasher) noexcept {
-#if defined(__x86_64__) || defined(__amd64__) || defined(__i386__)
+#if(__x86_64__) || defined(__amd64__) || defined(__i386__)
     if (g_rdrand_supported) {
         uint64_t out = GetRdRand();
         hasher.Write((const unsigned char*)&out, sizeof(out));
@@ -197,7 +197,7 @@ static void SeedHardwareFast(CSHA512& hasher) noexcept {
 
 /** Add 256 bits of entropy gathered from hardware to hasher. Do nothing if not supported. */
 static void SeedHardwareSlow(CSHA512& hasher) noexcept {
-#if defined(__x86_64__) || defined(__amd64__) || defined(__i386__)
+#if(__x86_64__) || defined(__amd64__) || defined(__i386__)
     // When we want 256 bits of entropy, prefer RdSeed over RdRand, as it's
     // guaranteed to produce independent randomness on every call.
     if (g_rdseed_supported) {
@@ -274,7 +274,7 @@ static void GetDevURandom(unsigned char *ent32)
 /** Get 32 bytes of system entropy. */
 void GetOSRand(unsigned char *ent32)
 {
-#if defined(WIN32)
+#if(WIN32)
     HCRYPTPROV hProvider;
     int ret = CryptAcquireContextW(&hProvider, nullptr, nullptr, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
     if (!ret) {

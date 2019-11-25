@@ -2,13 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
 #include <cstddef>
 
-#if defined(HAVE_SYS_SELECT_H)
+#if(HAVE_SYS_SELECT_H)
 bool sanity_test_fdelt();
 #endif
 
@@ -45,7 +45,7 @@ bool sanity_test_memcpy()
 
 bool glibc_sanity_test()
 {
-#if defined(HAVE_SYS_SELECT_H)
+#if(HAVE_SYS_SELECT_H)
     if (!sanity_test_fdelt())
         return false;
 #endif

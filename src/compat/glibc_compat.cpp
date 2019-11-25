@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
 #include <cstddef>
 #include <cstdint>
 
-#if defined(HAVE_SYS_SELECT_H)
+#if(HAVE_SYS_SELECT_H)
 #include <sys/select.h>
 #endif
 
@@ -29,7 +29,7 @@ extern "C" FDELT_TYPE __fdelt_warn(FDELT_TYPE a)
 }
 extern "C" FDELT_TYPE __fdelt_chk(FDELT_TYPE) __attribute__((weak, alias("__fdelt_warn")));
 
-#if defined(__i386__) || defined(__arm__)
+#if(__i386__) || defined(__arm__)
 
 extern "C" int64_t __udivmoddi4(uint64_t u, uint64_t v, uint64_t* rp);
 

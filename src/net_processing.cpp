@@ -30,7 +30,7 @@
 
 #include <memory>
 
-#if defined(NDEBUG)
+#if(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
 #endif
 

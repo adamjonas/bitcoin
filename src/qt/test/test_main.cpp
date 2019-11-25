@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -23,12 +23,12 @@
 #include <QObject>
 #include <QTest>
 
-#if defined(QT_STATICPLUGIN)
+#if(QT_STATICPLUGIN)
 #include <QtPlugin>
-#if defined(QT_QPA_PLATFORM_MINIMAL)
+#if(QT_QPA_PLATFORM_MINIMAL)
 Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin);
 #endif
-#if defined(QT_QPA_PLATFORM_XCB)
+#if(QT_QPA_PLATFORM_XCB)
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #elif defined(QT_QPA_PLATFORM_WINDOWS)
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     // Prefer the "minimal" platform for the test instead of the normal default
     // platform ("xcb", "windows", or "cocoa") so tests can't unintentionally
     // interfere with any background GUIs and don't require extra resources.
-    #if defined(WIN32)
+    #if(WIN32)
         if (getenv("QT_QPA_PLATFORM") == nullptr) _putenv_s("QT_QPA_PLATFORM", "minimal");
     #else
         setenv("QT_QPA_PLATFORM", "minimal", /* overwrite */ 0);

@@ -52,7 +52,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/thread.hpp>
 
-#if defined(NDEBUG)
+#if(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
 #endif
 

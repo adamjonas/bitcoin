@@ -119,7 +119,7 @@ BOOST_FIXTURE_TEST_SUITE(sighash_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(sighash_test)
 {
-    #if defined(PRINT_SIGHASH_JSON)
+    #if(PRINT_SIGHASH_JSON)
     std::cout << "[\n";
     std::cout << "\t[\"raw_transaction, script, input_index, hashType, signature_hash (result)\"],\n";
     int nRandomTests = 500;
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(sighash_test)
         uint256 sh, sho;
         sho = SignatureHashOld(scriptCode, CTransaction(txTo), nIn, nHashType);
         sh = SignatureHash(scriptCode, txTo, nIn, nHashType, 0, SigVersion::BASE);
-        #if defined(PRINT_SIGHASH_JSON)
+        #if(PRINT_SIGHASH_JSON)
         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
         ss << txTo;
 
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(sighash_test)
         #endif
         BOOST_CHECK(sh == sho);
     }
-    #if defined(PRINT_SIGHASH_JSON)
+    #if(PRINT_SIGHASH_JSON)
     std::cout << "]\n";
     #endif
 }

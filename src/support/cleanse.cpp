@@ -7,13 +7,13 @@
 
 #include <cstring>
 
-#if defined(_MSC_VER)
+#if(_MSC_VER)
 #include <Windows.h> // For SecureZeroMemory.
 #endif
 
 void memory_cleanse(void *ptr, size_t len)
 {
-#if defined(_MSC_VER)
+#if(_MSC_VER)
     /* SecureZeroMemory is guaranteed not to be optimized out by MSVC. */
     SecureZeroMemory(ptr, len);
 #else

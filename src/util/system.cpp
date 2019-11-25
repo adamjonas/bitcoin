@@ -917,7 +917,7 @@ bool FileCommit(FILE *file)
         return false;
     }
 #else
-    #if defined(__linux__) || defined(__NetBSD__)
+    #if(__linux__) || defined(__NetBSD__)
     if (fdatasync(fileno(file)) != 0 && errno != EINVAL) { // Ignore EINVAL for filesystems that don't support sync
         LogPrintf("%s: fdatasync failed: %d\n", __func__, errno);
         return false;
@@ -938,7 +938,7 @@ bool FileCommit(FILE *file)
 }
 
 bool TruncateFile(FILE *file, unsigned int length) {
-#if defined(WIN32)
+#if(WIN32)
     return _chsize(_fileno(file), length) == 0;
 #else
     return ftruncate(fileno(file), length) == 0;
@@ -950,7 +950,7 @@ bool TruncateFile(FILE *file, unsigned int length) {
  * It returns the actual file descriptor limit (which may be more or less than nMinFD)
  */
 int RaiseFileDescriptorLimit(int nMinFD) {
-#if defined(WIN32)
+#if(WIN32)
     return 2048;
 #else
     struct rlimit limitFD;
@@ -973,7 +973,7 @@ int RaiseFileDescriptorLimit(int nMinFD) {
  * it is advisory, and the range specified in the arguments will never contain live data
  */
 void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
-#if defined(WIN32)
+#if(WIN32)
     // Windows-specific version
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(file));
     LARGE_INTEGER nFileSize;
@@ -996,7 +996,7 @@ void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
     }
     ftruncate(fileno(file), fst.fst_length);
 #else
-    #if defined(__linux__)
+    #if(__linux__)
     // Version using posix_fallocate
     off_t nEndPos = (off_t)offset + length;
     if (0 == posix_fallocate(fileno(file), 0, nEndPos)) return;

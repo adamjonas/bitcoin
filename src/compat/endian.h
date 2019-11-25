@@ -5,7 +5,7 @@
 #ifndef BITCOIN_COMPAT_ENDIAN_H
 #define BITCOIN_COMPAT_ENDIAN_H
 
-#if defined(HAVE_CONFIG_H)
+#if(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
 #endif
 
@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#if defined(HAVE_ENDIAN_H)
+#if(HAVE_ENDIAN_H)
 #include <endian.h>
 #elif defined(HAVE_SYS_ENDIAN_H)
 #include <sys/endian.h>
@@ -64,7 +64,7 @@
 
 #endif // HAVE_CONFIG_H
 
-#if defined(WORDS_BIGENDIAN)
+#if(WORDS_BIGENDIAN)
 
 #if HAVE_DECL_HTOBE16 == 0
 inline uint16_t htobe16(uint16_t host_16bits)

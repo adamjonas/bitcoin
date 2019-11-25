@@ -5,7 +5,7 @@
 #ifndef BITCOIN_COMPAT_CPUID_H
 #define BITCOIN_COMPAT_CPUID_H
 
-#if defined(__x86_64__) || defined(__amd64__) || defined(__i386__)
+#if(__x86_64__) || defined(__amd64__) || defined(__i386__)
 #define HAVE_GETCPUID
 
 #include <cpuid.h>

@@ -4,7 +4,7 @@
 
 #include <qt/winshutdownmonitor.h>
 
-#if defined(Q_OS_WIN)
+#if(Q_OS_WIN)
 #include <shutdown.h>
 
 #include <windows.h>

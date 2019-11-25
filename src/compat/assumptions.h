@@ -13,7 +13,7 @@
 // Assumption: We assume that the macro NDEBUG is not defined.
 // Example(s): We use assert(...) extensively with the assumption of it never
 //             being a noop at runtime.
-#if defined(NDEBUG)
+#if(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
 #endif
 
