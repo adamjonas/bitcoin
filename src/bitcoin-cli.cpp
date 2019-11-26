@@ -285,28 +285,34 @@ public:
 class GenerateRequestHandler: public BaseRequestHandler
 {
 public:
-    const int N_BLOCKS = 0;
-    const int ADDRESS = 1;
+    const int ID_N_BLOCKS = 0;
+    const int ID_ADDRESS = 1;
 
-    /** Create a simulated `getinfo` request. */
+    /** Create a simulated `generate` request. */
     UniValue PrepareRequest(const std::string& method, const std::vector<std::string>& args) override
     {
+
         if (args.empty()) {
             throw std::runtime_error("-generate requires an the number of blocks you wish to generate");
         }
         UniValue result(UniValue::VARR);
-        std::cout << "@@@@@@@@@@";
-
-        result.push_back(JSONRPCRequestObj("getnewaddress", NullUniValue, args[0]));
-        // result.push_back(JSONRPCRequestObj("getwalletinfo", NullUniValue, ID_WALLETINFO));
+        UniValue params(UniValue::VARR);
+        UniValue get_new_address = JSONRPCRequestObj("getnewaddress", NullUniValue, ID_ADDRESS);
+        params.push_back(args[0]);
+        params.push_back(get_new_address);
+        result.push_back(JSONRPCRequestObj("generatetoaddress", params, ID_N_BLOCKS));
+        // result.push_back(get_new_address);
         return result;
     }
 
-    /** Collect values from the batch and form a simulated `getinfo` reply. */
+    /** Collect values from the batch and form a simulated `generate` reply. */
     UniValue ProcessReply(const UniValue &batch_in) override
     {
         UniValue result(UniValue::VOBJ);
-        std::vector<UniValue> batch = JSONRPCProcessBatchReply(batch_in, 2);
+        std::vector<UniValue> batch = JSONRPCProcessBatchReply(batch_in, 3);
+        result.pushKV("address", batch[ID_ADDRESS]["result"]);
+        result.pushKV("generate", batch[ID_N_BLOCKS]["result"]);
+        result.pushKV("generate-errors", batch[ID_N_BLOCKS]["error"]);
         return JSONRPCReplyObj(result, NullUniValue, 1);
      }
 };
