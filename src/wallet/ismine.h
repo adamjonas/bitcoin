@@ -18,7 +18,7 @@ class CScript;
  * IsMine() return codes, which depend on ScriptPubKeyMan implementation.
  * Not every ScriptPubKeyMan covers all types, please refer to
  * doc/release-notes.md#ismine-semantics for better understanding.
- * 
+ *
  * For LegacyScriptPubKeyMan,
  * ISMINE_NO: the scriptPubKey is not in the wallet;
  * ISMINE_WATCH_ONLY: the scriptPubKey has been imported into the wallet;
@@ -27,12 +27,12 @@ class CScript;
  * ISMINE_ALL: all ISMINE flags except for USED;
  * ISMINE_ALL_USED: all ISMINE flags including USED;
  * ISMINE_ENUM_ELEMENTS: the number of isminetype enum elements.
- * 
+ *
  * For DescriptorScriptPubKeyMan and future ScriptPubKeyMan,
  * ISMINE_NO: the scriptPubKey is not in the wallet;
  * ISMINE_SPENDABLE: the scriptPubKey matches a scriptPubKey in the wallet.
  * ISMINE_USED: the scriptPubKey corresponds to a used address owned by the wallet user.
- * 
+ *
  */
 enum isminetype : unsigned int
 {
